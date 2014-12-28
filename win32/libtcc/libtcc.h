@@ -93,8 +93,8 @@ LIBTCCAPI int tcc_relocate(TCCState *s1, void *ptr);
 LIBTCCAPI void *tcc_get_symbol(TCCState *s, const char *name);
 
 #ifdef CONFIG_TCC_STATE_EXTRAS
+#undef TMPL_IMPLEMENT
 #include "zlist.h"
-
 
 #endif // CONFIG_TCC_STATE_EXTRAS
 

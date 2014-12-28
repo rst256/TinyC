@@ -131,7 +131,7 @@
 @copy tcc.exe %install_to% /Y /V >install.log
 
 @echo ------------------------- Testing installed complnents -------------------------
-start run-quick-tests.bat  %install_to%
+cmd /k run-quick-tests.bat  %install_to%
 @IF %ERRORLEVEL% EQU 1 GOTO error
 @echo ------------------------- Testing complnents sussefull -------------------------
 @rem pause

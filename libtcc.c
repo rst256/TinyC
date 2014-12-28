@@ -1942,7 +1942,14 @@ PUB_FUNC void tcc_print_stats(TCCState *s, int64_t total_time)
 
 #ifdef CONFIG_TCC_STATE_EXTRAS
 
-#include "zlist.c"
+#ifdef TCC_RELEASE_BUILD_FLAG
+#warning Enable advanced tcc api. Remember this api is VERY BETA and only for tcc development.\
+Dont use this api in you project. Interface of this api may be changed.
+#endif // TCC_RELEASE_BUILD_FLAG
+
+#define TMPL_IMPLEMENT
+#include "zlist.h"
+#undef TMPL_IMPLEMENT
 
 #endif // CONFIG_TCC_STATE_EXTRAS
 

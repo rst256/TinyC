@@ -20,12 +20,44 @@ const char build_in_defines[] =
 const 	char * build_in_header = "..\\libtcc\\libtcc.h";
 */
 
+#define ZLIST_FOREACH_HELPER(VAR, INDEX_VAR, LIST) if( (LIST) != 0 ) \
+		for(int INDEX_VAR=0; (VAR = (LIST)[INDEX_VAR]) != 0; INDEX_VAR++)
+#define foreach(VAR, LIST) ZLIST_FOREACH_HELPER(VAR, VAR##_index_##__LINE__, LIST)
+#define foreach_i(VAR, VAR_I, LIST) ZLIST_FOREACH_HELPER(VAR, VAR_I, LIST)
+
+
+#define TCC_LIST_COUNT(NAME, TCC) tcc_##NAME##_count(TCC)
+#define TCC_LIST_REF(NAME, TCC) tcc_getref_##NAME(TCC)
+#define TCC_LIST_REF(NAME, TCC) tcc_get_##NAME(TCC)
+
+#define ZLIST_DUMP(NAME) \
+	printf("%s(%i):\n", #NAME, TCC_LIST_COUNT(NAME, tcc)); \
+	foreach_i(s, i, TCC_LIST_REF(NAME, tcc)) printf("\t%i: %s\n", i, s);
+
+//	foreach_i(s, i, TCC_LIST_REF(NAME, tcc)) printf("%i: %s\n", i, s);
+		
+	
+
+
+
+void tcc_state(TCCState * tcc){
+	char *s;
+	printf("\n");
+	ZLIST_DUMP(include_paths);
+	ZLIST_DUMP(sysinclude_paths);
+	ZLIST_DUMP(library_paths);
+	ZLIST_DUMP(crt_paths);
+	ZLIST_DUMP(target_deps);
+}
+
 int main(int argc, char **argv)
 {
 
 	int (*the_main)(int, char **, TCCState *);
+	/*
 	string* arg_list = zlist_build(argc, argv);
 	char * s;
+	*/
 
 	/*
 	foreach(s, arg_list)
@@ -42,11 +74,13 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Could not create tcc state\n");
 		exit(1);
 	}
+	/*
 	printf("include path count is %i\n", tcc_include_paths_nb(tccState));
 	zstringlist_t paths=tcc_get_include_paths(tccState);
 	foreach(s, paths)
 		printf("include path #%i: %s\n", s_index+1, s);
-
+	*/
+	tcc_state(tccState);
 	//tcc_add_include_path(tccState, "..\\..\\libtcc");
 	//tcc_add_sysinclude_path(tccState, "..\\include");
 	//tcc_add_sysinclude_path(tccState, "..\\include\\winapi");
@@ -58,16 +92,24 @@ int main(int argc, char **argv)
 			if(argv[i][0] == '-')
 				tcc_set_options(tccState, argv[i]);
 	}
+	/*
 	printf("include path count is %i\n", tcc_include_paths_nb(tccState));
+	*/
+	/*
 	paths=tcc_get_include_paths(tccState);
 		foreach(s, paths)
 			printf("include path #%i: %s\n", s_index+1, s);
+	*/
+	tcc_state(tccState);
 
 	tcc_add_include_path(tccState, "libtcc");
 
+	/*
 	printf("include path count is %i\n", tcc_include_paths_nb(tccState));
 	foreach(s, tcc_get_include_paths(tccState))
 		printf("include path #%i: %s\n", s_index+1, s);
+	*/
+	tcc_state(tccState);
 
     /* if tcclib.h and libtcc1.a are not installed, where can we find them */
     /*
@@ -75,15 +117,6 @@ int main(int argc, char **argv)
         tcc_set_lib_path(tccState, argv[1]+9);
     */
 
-#define TCC_GET_ZLIST(NAME) printf("zlist %s:\n", #NAME); \
-		foreach(s, tcc_get_##NAME(tccState)) \
-			printf("\t #%i: %s\n" , s_index+1, s);
-
-TCC_GET_ZLIST(library_paths);
-TCC_GET_ZLIST(crt_paths);
-TCC_GET_ZLIST(target_deps);
-
-#undef TCC_GET_ZLIST
 
 	/* MUST BE CALLED before any compilation */
 	tcc_set_output_type(tccState, TCC_OUTPUT_MEMORY);
