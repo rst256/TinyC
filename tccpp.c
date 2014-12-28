@@ -1137,7 +1137,9 @@ static int expr_preprocess(void)
                 next_nomacro();
             tok = TOK_CINT;
             tokc.i = c;
-        } else if (tok == TOK_HEXISTS) {
+        } 
+#ifdef CONFIG_TCC_PP_EXTRAS
+			else if (tok == TOK_HEXISTS) {
             next_nomacro();
             t = tok;
             if (t == '(') 
@@ -1147,7 +1149,9 @@ static int expr_preprocess(void)
                 next_nomacro();
             tok = TOK_CINT;
             tokc.i = c;
-		} else if (tok >= TOK_IDENT) {
+		} 
+#endif
+			else if (tok >= TOK_IDENT) {
             /* if undefined macro */
             tok = TOK_CINT;
             tokc.i = 0;

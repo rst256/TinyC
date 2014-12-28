@@ -83,8 +83,9 @@
      DEF(TOK___VA_ARGS__, "__VA_ARGS__")
 
 /* special custom macros */
+#ifdef CONFIG_TCC_PP_EXTRAS
      DEF(TOK_HEXISTS, "hexists")
-
+#endif
 /* special identifiers */
      DEF(TOK___FUNC__, "__func__")
 

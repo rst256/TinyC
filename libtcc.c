@@ -1940,3 +1940,12 @@ PUB_FUNC void tcc_print_stats(TCCState *s, int64_t total_time)
            total_bytes / tt / 1000000.0);
 }
 
+#ifdef CONFIG_TCC_STATE_EXTRAS
+
+#include "zlist.c"
+
+#endif // CONFIG_TCC_STATE_EXTRAS
+
+
+
+

@@ -22,14 +22,31 @@ const 	char * build_in_header = "..\\libtcc\\libtcc.h";
 
 int main(int argc, char **argv)
 {
-	
+
 	int (*the_main)(int, char **, TCCState *);
-	
+	string* arg_list = zlist_build(argc, argv);
+	char * s;
+
+	/*
+	foreach(s, arg_list)
+		printf("%i: %s\n", s_index, s);
+	*/
+
+        /*
+        int s_index; if( (arg_list) != 0 ) for(s_index=0; (s = (arg_list)[s_index]) != 0; s_index++)
+                printf("%i: %s\n", s_index, s);
+        */
+
 	tccState = tcc_new();
 	if (!tccState) {
 		fprintf(stderr, "Could not create tcc state\n");
 		exit(1);
 	}
+	printf("include path count is %i\n", tcc_include_paths_nb(tccState));
+	zstringlist_t paths=tcc_get_include_paths(tccState);
+	foreach(s, paths)
+		printf("include path #%i: %s\n", s_index+1, s);
+
 	//tcc_add_include_path(tccState, "..\\..\\libtcc");
 	//tcc_add_sysinclude_path(tccState, "..\\include");
 	//tcc_add_sysinclude_path(tccState, "..\\include\\winapi");
@@ -41,20 +58,40 @@ int main(int argc, char **argv)
 			if(argv[i][0] == '-')
 				tcc_set_options(tccState, argv[i]);
 	}
+	printf("include path count is %i\n", tcc_include_paths_nb(tccState));
+	paths=tcc_get_include_paths(tccState);
+		foreach(s, paths)
+			printf("include path #%i: %s\n", s_index+1, s);
 
-	
+	tcc_add_include_path(tccState, "libtcc");
+
+	printf("include path count is %i\n", tcc_include_paths_nb(tccState));
+	foreach(s, tcc_get_include_paths(tccState))
+		printf("include path #%i: %s\n", s_index+1, s);
+
     /* if tcclib.h and libtcc1.a are not installed, where can we find them */
     /*
     if (argc >= 2 && !memcmp(argv[1], "lib_path=",9))
         tcc_set_lib_path(tccState, argv[1]+9);
     */
 
+#define TCC_GET_ZLIST(NAME) printf("zlist %s:\n", #NAME); \
+		foreach(s, tcc_get_##NAME(tccState)) \
+			printf("\t #%i: %s\n" , s_index+1, s);
+
+TCC_GET_ZLIST(library_paths);
+TCC_GET_ZLIST(crt_paths);
+TCC_GET_ZLIST(target_deps);
+
+#undef TCC_GET_ZLIST
 
 	/* MUST BE CALLED before any compilation */
 	tcc_set_output_type(tccState, TCC_OUTPUT_MEMORY);
 	tcc_add_symbol(tccState, "GetTccState", (void*)GetTccState);
 	//tcc_add_file(tccState, "..\\libtcc.dll");
    // tcc_add_symbol(tccState, "include", include);
+//printf("output_type is %i\n", tccState->verbose);
+
 /*
 
 	if(tcc_add_file(tccState, build_in_header) == -1){

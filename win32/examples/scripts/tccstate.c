@@ -87,6 +87,8 @@ int print_file(const char *filename) {
 
 int TccMain(int argc, char **argv, TCCState * tccState){
 	printf("tccState is %p=%p\n", tccState, GetTccState());
+	//printf("output_type is %i\n", tccState->output_type);
+
 	//return main(argc, argv);
 }
 
