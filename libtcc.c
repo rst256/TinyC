@@ -620,8 +620,28 @@ PUB_FUNC void tcc_error_noabort(const char *fmt, ...)
     va_end(ap);
 }
 
-PUB_FUNC void tcc_error(const char *fmt, ...)
-{
+/*
+#ifdef CONFIG_TCC_CORE_DEBUG
+//PUB_FUNC void _tcc_error(const char *file, int line, const char *fmt, ...){
+PUB_FUNC void _tcc_error(const char *fmt, ...){
+    TCCState *s1 = tcc_state;
+    va_list ap;
+
+    va_start(ap, fmt);
+    error1(s1, 0, fmt, ap);
+    va_end(ap);
+    //better than nothing: in some cases, we accept to handle errors 
+    if (s1->error_set_jmp_enabled) {
+        longjmp(s1->error_jmp_buf, 1);
+    } else {
+        // XXX: eliminate this someday
+        exit(1);
+    }
+}
+*/
+
+//#else // CONFIG_TCC_CORE_DEBUG
+PUB_FUNC void tcc_error(const char *fmt, ...){
     TCCState *s1 = tcc_state;
     va_list ap;
 
@@ -636,6 +656,8 @@ PUB_FUNC void tcc_error(const char *fmt, ...)
         exit(1);
     }
 }
+
+//#endif // CONFIG_TCC_CORE_DEBUG
 
 PUB_FUNC void tcc_warning(const char *fmt, ...)
 {

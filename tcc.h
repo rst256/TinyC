@@ -1012,7 +1012,14 @@ PUB_FUNC char *tcc_strdup(const char *str);
 #define strdup(s) use_tcc_strdup(s)
 PUB_FUNC void tcc_memstats(void);
 PUB_FUNC void tcc_error_noabort(const char *fmt, ...);
+
+//#ifdef CONFIG_TCC_CORE_DEBUG
+//#define tcc_error(FMT, ...) _tcc_error(__FILE__, __LINE__, FMT, __VA_ARGS__) 
+//PUB_FUNC void _tcc_error(const char *file, int line, const char *fmt, ...);
+//#else // CONFIG_TCC_CORE_DEBUG
 PUB_FUNC void tcc_error(const char *fmt, ...);
+//#endif // CONFIG_TCC_CORE_DEBUG
+
 PUB_FUNC void tcc_warning(const char *fmt, ...);
 
 /* other utilities */
@@ -1107,8 +1114,23 @@ ST_INLN void unget_tok(int last_tok);
 ST_FUNC void preprocess_init(TCCState *s1);
 ST_FUNC void preprocess_new(void);
 ST_FUNC int tcc_preprocess(TCCState *s1);
+
+#ifdef CONFIG_TCC_CORE_DEBUG
+
+
+#define skip(C) _skip(__FILE__, __LINE__, #C, C)
+
+#define expect(C)		_expect(__FILE__, __LINE__, #C, C); 
+
+ST_FUNC void _skip(const char *file, int line, const char *C, int c);
+ST_FUNC void _expect(const char *file, int line, const char *MSG, const char *msg);
+
+#else // CONFIG_TCC_CORE_DEBUG
+
 ST_FUNC void skip(int c);
 ST_FUNC void expect(const char *msg);
+
+#endif
 
 /* ------------ tccgen.c ------------ */
 

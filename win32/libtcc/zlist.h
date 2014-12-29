@@ -24,7 +24,6 @@ typedef struct NAME * NAME;
 #endif
 
 
-
 #define ZLIST_BUILDER(NAME, EXT_T, ITEM_TYPE, COPY_FUNC) \
 	PUB_FUNC EXT_T NAME(int argc, ITEM_TYPE* argv) TMPL_IMPL( \
 		int i; \
@@ -36,12 +35,14 @@ typedef struct NAME * NAME;
 		return new_zlist; \
 	)
 
+#ifndef _ZLIST_STATIC_CODE_H
+#define _ZLIST_STATIC_CODE_H
 
 #define ZLIST_FOREACH_HELPER(VAR, INDEX_VAR, LIST) if( (LIST) != 0 ) \
 		for(int INDEX_VAR=0; (VAR = (LIST)[INDEX_VAR]) != 0; INDEX_VAR++)
-#define ZLIST_FOREACH(VAR, LIST) foreach_helper(VAR, VAR##_index, LIST)
+#define foreach(VAR, LIST) ZLIST_FOREACH_HELPER(VAR, VAR##_index, LIST)
 
-
+#endif
 
 #define TCC_STATE_LIST_TYPE(TYPE, ITEM_TYPE, FUNC_COPY, FUNC_REF) \
 	TMPL_DEF( typedef ITEM_TYPE * TYPE##_zlist_t ) \
@@ -72,6 +73,7 @@ TCC_STATE_LIST_API(string, sysinclude_paths);
 TCC_STATE_LIST_API(string, library_paths);
 TCC_STATE_LIST_API(string, crt_paths);
 TCC_STATE_LIST_API(string, target_deps);
+TCC_STATE_LIST_API(string, files);
 
 
 

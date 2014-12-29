@@ -1,4 +1,0 @@
-LIBRARY luatcc.dll
-
-EXPORTS
-luaopen_luatcc

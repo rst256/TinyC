@@ -5,7 +5,7 @@
 @echo -------------------------------- Building Tiny C --------------------------------
 @set install_to=c:\lua\5.1\clibs\luatcc
 @set libtcc_src=../libtcc.c
-@set flags_extras= -DCONFIG_TCC_PP_EXTRAS -DCONFIG_TCC_STATE_EXTRAS
+@set flags_extras= -DCONFIG_TCC_PP_EXTRAS -DCONFIG_TCC_STATE_EXTRAS -DCONFIG_TCC_CORE_DEBUG
 @rem set flags_extras=
 
 @rem "parsing" build cmdline options

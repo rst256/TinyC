@@ -40,7 +40,8 @@ typedef struct NAME * NAME;
 
 #define ZLIST_FOREACH_HELPER(VAR, INDEX_VAR, LIST) if( (LIST) != 0 ) \
 		for(int INDEX_VAR=0; (VAR = (LIST)[INDEX_VAR]) != 0; INDEX_VAR++)
-#define foreach(VAR, LIST) ZLIST_FOREACH_HELPER(VAR, VAR##_index, LIST)
+#define foreach(VAR, LIST) ZLIST_FOREACH_HELPER(VAR, VAR##_index_##__LINE__, LIST)
+#define foreach_i(VAR, VAR_I, LIST) ZLIST_FOREACH_HELPER(VAR, VAR_I, LIST)
 
 #endif
 
@@ -63,8 +64,12 @@ typedef struct NAME * NAME;
 #define TCC_STATE_LIST_API(TYPE, NAME) \
 	TCC_STATE_LIST_API_HELPER(TYPE##_zlist_t, TYPE##_zlist_build, TYPE##_zlistref_build, NAME)
 	
+#define TCC_LIST_COUNT(NAME, TCC) tcc_##NAME##_count(TCC)
+#define TCC_LIST_REF(NAME, TCC) tcc_getref_##NAME(TCC)
+#define TCC_LIST(NAME, TCC) tcc_get_##NAME(TCC)
 
-
+#if 	defined(TCC_STATE_LIST_API) && \
+		defined(TCC_STATE_LIST_TYPE) 
 
 TCC_STATE_LIST_TYPE(string, char*, tcc_strdup, TMPL_STUB );
 
@@ -77,14 +82,10 @@ TCC_STATE_LIST_API(string, files);
 
 
 
-#undef ZLIST_BUILDER
-
-#undef TCC_STATE_LIST_API_HELPER
 #undef TCC_STATE_LIST_API
 #undef TCC_STATE_LIST_TYPE
 
-#undef TMPL_OPAQUE_REF
-#undef TMPL_IMPL
-#undef TMPL_DEF
-#undef TMPL_IMPLEMENT 
+#else
+	#error TCC_STATE_LIST_API, TCC_STATE_LIST_TYPE not defined!
+#endif
 

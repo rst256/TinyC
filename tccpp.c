@@ -87,6 +87,22 @@ static void macro_subst(
     struct macro_level **can_read_stream
     );
 
+#ifdef CONFIG_TCC_CORE_DEBUG
+
+ST_FUNC void _skip(const char *file, int line, const char *C, int c)
+{
+    if (tok != c)
+        tcc_error("skip('%s' => %i) %s:%i: '%c' expected (got \"%s\")", C, c, file, line, c, get_tok_str(tok, &tokc));
+    next();
+}
+
+ST_FUNC void _expect(const char *file, int line, const char *C, const char *msg)
+{
+    tcc_error("expect('%s') %s:%i: %s expected ", C, file, line, msg);
+}
+
+#else // CONFIG_TCC_CORE_DEBUG
+
 ST_FUNC void skip(int c)
 {
     if (tok != c)
@@ -98,6 +114,8 @@ ST_FUNC void expect(const char *msg)
 {
     tcc_error("%s expected", msg);
 }
+
+#endif // CONFIG_TCC_CORE_DEBUG
 
 /* ------------------------------------------------------------------------- */
 /* CString handling */

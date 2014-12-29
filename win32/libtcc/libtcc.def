@@ -20,14 +20,17 @@ tcc_delete
 tcc_error
 tcc_error_noabort
 tcc_fileextension
+tcc_files_count
 tcc_free
 tcc_get_crt_paths
+tcc_get_files
 tcc_get_include_paths
 tcc_get_library_paths
 tcc_get_symbol
 tcc_get_sysinclude_paths
 tcc_get_target_deps
 tcc_getref_crt_paths
+tcc_getref_files
 tcc_getref_include_paths
 tcc_getref_library_paths
 tcc_getref_sysinclude_paths

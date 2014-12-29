@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "libtcc.h"
+//#include "libtcc.h"
 
+#define head "libtcc.h"
+#include head
 
 static TCCState *tccState;
 
@@ -28,7 +30,7 @@ const 	char * build_in_header = "..\\libtcc\\libtcc.h";
 
 #define TCC_LIST_COUNT(NAME, TCC) tcc_##NAME##_count(TCC)
 #define TCC_LIST_REF(NAME, TCC) tcc_getref_##NAME(TCC)
-#define TCC_LIST_REF(NAME, TCC) tcc_get_##NAME(TCC)
+#define TCC_LIST(NAME, TCC) tcc_get_##NAME(TCC)
 
 #define ZLIST_DUMP(NAME) \
 	printf("%s(%i):\n", #NAME, TCC_LIST_COUNT(NAME, tcc)); \
@@ -81,6 +83,10 @@ int main(int argc, char **argv)
 		printf("include path #%i: %s\n", s_index+1, s);
 	*/
 	tcc_state(tccState);
+	for1(){
+	tcc_state(tccState);
+
+}
 	//tcc_add_include_path(tccState, "..\\..\\libtcc");
 	//tcc_add_sysinclude_path(tccState, "..\\include");
 	//tcc_add_sysinclude_path(tccState, "..\\include\\winapi");

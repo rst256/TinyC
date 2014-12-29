@@ -4677,7 +4677,7 @@ static void block(int *bsym, int *csym, int *case_sym, int *def_sym,
     } else if (tok == TOK_ASM1 || tok == TOK_ASM2 || tok == TOK_ASM3) {
         asm_instr();
     } else {
-        b = is_label();
+        b = is_label(); //40k 54a-4
         if (b) {
             /* label case */
             s = label_find(b);
