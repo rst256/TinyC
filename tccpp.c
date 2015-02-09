@@ -2471,6 +2471,19 @@ maybe_newline:
         }
         break;
 
+    case ':':
+        PEEKC(c, p);
+        if (c == ':') {
+            p++;
+            tok = TOK_DB_COLON;
+        }  else if (c == '>') {
+            p++;
+            tok = TOK_CL_ARROW;
+        } else {
+            tok = ':';
+        }
+        break;
+
     PARSE2('!', '!', '=', TOK_NE)
     PARSE2('=', '=', '=', TOK_EQ)
     PARSE2('*', '*', '=', TOK_A_MUL)
@@ -2506,7 +2519,7 @@ maybe_newline:
     case '}':
     case ',':
     case ';':
-    case ':':
+    //case ':':
     case '?':
     case '~':
     case '$': /* only used in assembler */

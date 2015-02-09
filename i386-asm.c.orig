@@ -1029,9 +1029,6 @@ static inline int constraint_priority(const char *str)
         case 'i':
         case 'm':
         case 'g':
-        case 'f':
-        case 't':
-        case 'u':
             pr = 4;
             break;
         default:

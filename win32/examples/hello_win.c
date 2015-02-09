@@ -6,11 +6,10 @@
 
 #include <windows.h>
 
-#define APPNAME "win32 app"
-#define APPCONTENT "win32 app content"
+#define APPNAME "HELLO_WIN"
 
 char szAppName[] = APPNAME; // The name of this application
-char szTitle[]   = APPNAME ; // The title bar text
+char szTitle[]   = APPNAME; // The title bar text
 const char *pWindowText;
 
 void CenterWindow(HWND hWnd);
@@ -90,7 +89,7 @@ int APIENTRY WinMain(
     WNDCLASS wc;
     HWND hwnd;
 
-    pWindowText = lpCmdLine[0] ? lpCmdLine : APPCONTENT;
+    pWindowText = lpCmdLine[0] ? lpCmdLine : "Hello Windows!";
 
     // Fill in window class structure with parameters that describe
     // the main window.

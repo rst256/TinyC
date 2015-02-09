@@ -10,7 +10,6 @@ extern "C" {
 #endif
 
 struct TCCState;
-
 typedef struct TCCState TCCState;
 
 /* create a new TCC compilation context */
@@ -92,6 +91,12 @@ LIBTCCAPI int tcc_relocate(TCCState *s1, void *ptr);
 
 /* return symbol value or NULL if not found */
 LIBTCCAPI void *tcc_get_symbol(TCCState *s, const char *name);
+
+#ifdef CONFIG_TCC_STATE_EXTRAS
+#undef TMPL_IMPLEMENT
+#include "zlist.h"
+
+#endif // CONFIG_TCC_STATE_EXTRAS
 
 #ifdef __cplusplus
 }

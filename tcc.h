@@ -810,8 +810,12 @@ struct TCCState {
 #define TOK_EOF       (-1)  /* end of file */
 #define TOK_LINEFEED  10    /* line feed */
 
+/* operation with generic structure of type field */
+#define TOK_CL_ARROW 0xfe /* access to generic structure field */
+#define TOK_DB_COLON 0xfd /* define new field in generic structure */
+
 /* all identificators and strings have token above that */
-#define TOK_IDENT 256
+#define TOK_IDENT 0x100
 
 #define DEF_ASM(x) DEF(TOK_ASM_ ## x, #x)
 #define TOK_ASM_int TOK_INT

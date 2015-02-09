@@ -1,6 +1,10 @@
 LIBRARY libtcc.dll
 
 EXPORTS
+dbg_printf
+dlclose
+get_export_names
+patch_dynsym_undef
 pstrcat
 pstrcpy
 pstrncpy
@@ -36,3 +40,5 @@ tcc_set_output_type
 tcc_strdup
 tcc_undefine_symbol
 tcc_warning
+vpush
+vpush64

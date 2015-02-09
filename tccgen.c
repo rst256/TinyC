@@ -2275,6 +2275,48 @@ static void type_to_str(char *buf, int buf_size,
  no_var: ;
 }
 
+static int get_type_id(CType *type)
+{
+    int bt, v, t;
+    Sym *s, *sa;
+    int type_id = 0;
+
+    t = type->t & VT_TYPE;
+    bt = t & VT_BTYPE;
+    if (t & VT_CONSTANT) type_id = type_id | VT_CONSTANT;
+    if (t & VT_VOLATILE) type_id = type_id | VT_VOLATILE;
+    if (t & VT_UNSIGNED) type_id = type_id | VT_UNSIGNED;
+    switch(bt) {
+	case VT_VOID:
+	case VT_BOOL:
+	case VT_SHORT:
+	case VT_LLONG:
+	case VT_LONG:
+	case VT_FLOAT:
+	case VT_INT:
+	case VT_BYTE:
+	case VT_LDOUBLE:
+	case VT_DOUBLE:
+      type_id = type_id | bt;
+        break;
+    case VT_ENUM:
+    case VT_STRUCT:
+      type_id = type_id | bt;
+        v = type->ref->v & ~SYM_STRUCT;
+printf("get_type_id: %s, %s\n", get_tok_str(type->ref->v, NULL),get_tok_str(v, NULL));
+        if (v >= SYM_FIRST_ANOM)
+            type_id = type_id | SYM_FIRST_ANOM;
+        else
+            type_id = type_id | v;
+        break;
+    case VT_FUNC:
+      type_id = type_id | bt;
+        break;
+    //case VT_PTR:
+    }
+	return type_id;
+}
+
 /* verify type compatibility to store vtop in 'dt' type, and generate
    casts if needed. */
 static void gen_assign_cast(CType *dt)
@@ -3633,6 +3675,28 @@ ST_FUNC void unary(void)
         }
         vtop->type.t |= VT_UNSIGNED;
         break;
+    case TOK_TYPEID:
+        //t = tok;
+        next();
+        //in_sizeof++;
+int bt;
+CType type2;
+        parse_expr_type(&type2); // Perform a in_sizeof = 0;
+//char buf[500];
+//type_to_str(buf, sizeof(buf), &type2, NULL);
+//printf("typename: %s, %d, %p\n", buf, type2.t, type2.ref);
+//printf("typename: %s %s, %d\n", buf, get_tok_str(type2.ref->v & ~SYM_STRUCT, NULL), type2.ref->v);
+       // vpushi(type2.t );
+bt = type2.t & VT_TYPE ;
+        if (bt ==VT_STRUCT || bt ==VT_ENUM)
+		//if(type2.ref )
+			//vpush_global_sym(&type2, type2.ref->v );
+vpushi(type2.ref->v);
+//global_identifier_push(type2.ref->v, type2.t, 0);
+		else
+			vpushi(type2.t );
+        break;
+
 
     case TOK_builtin_types_compatible_p:
         {
@@ -3838,6 +3902,45 @@ ST_FUNC void unary(void)
                 /* if bound checking, the referenced pointer must be checked */
                 if (tcc_state->do_bounds_check)
                     vtop->r |= VT_MUSTBOUND;
+#endif
+            }
+            next();
+        }else if (tok == ':' || tok == TOK_CL_ARROW) {
+            int qualifiers;
+				SValue *sv = vtop;
+            /* field */ 
+           if (tok == TOK_CL_ARROW) 
+              indir();
+           qualifiers = sv->type.t & (VT_CONSTANT | VT_VOLATILE);
+            test_lvalue();
+            gaddrof();
+            next();
+            /* expect pointer on structure */
+            if ((sv->type.t & VT_BTYPE) != VT_STRUCT)
+                expect("shared struct or union");
+            s = sv->type.ref;
+            /* find field */
+            tok |= SYM_FIELD;
+            while ((s = s->next) != NULL) {
+                if (s->v == tok)
+                    break;
+            }
+            if (!s)
+                tcc_error("shared field not found: %s",  get_tok_str(tok & ~SYM_FIELD, NULL));
+            /* add field offset to pointer */
+            sv->type = char_pointer_type; /* change type to 'char *' */
+            vpushi(s->c);
+            gen_op('+');
+            /* change type to field type, and set to lvalue */
+            sv->type = s->type;
+            sv->type.t |= qualifiers;
+            /* an array is never an lvalue */
+            if (!(sv->type.t & VT_ARRAY)) {
+                sv->r |= lvalue_type(sv->type.t);
+#ifdef CONFIG_TCC_BCHECK
+                /* if bound checking, the referenced pointer must be checked */
+                if (tcc_state->do_bounds_check)
+                    sv->r |= VT_MUSTBOUND;
 #endif
             }
             next();

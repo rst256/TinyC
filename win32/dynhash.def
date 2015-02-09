@@ -1,4 +1,0 @@
-LIBRARY dynhash.exe
-
-EXPORTS
-HelloWorld
