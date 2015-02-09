@@ -9,14 +9,19 @@
 @SET target=-DTCC_TARGET_PE -DTCC_TARGET_I386
 @SET CC=mingw32-gcc 
 @SET P=32
-@GOTO tools
+@GOTO ut_tools
 
 :x86_64
 @SET target=-DTCC_TARGET_PE -DTCC_TARGET_X86_64
 @REM mingw 64 has an ICE with -Os
 @SET CC=x86_64-pc-mingw32-gcc -O0 -s -fno-strict-aliasing
 @SET P=64
-@GOTO tools
+@GOTO ut_tools
+
+:ut_tools
+@IF NOT EXIST include\nul mkdir include
+@copy ..\include\ut*.h include
+@IF %ERRORLEVEL% EQU 1 GOTO error
 
 :tools
 %CC% %target% tools/tiny_impdef.c -o tiny_impdef.exe 

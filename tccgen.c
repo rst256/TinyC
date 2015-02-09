@@ -3906,8 +3906,12 @@ vpushi(type2.ref->v);
             }
             next();
         }else if (tok == ':' || tok == TOK_CL_ARROW) {
-            int qualifiers;
-				SValue *sv = vtop;
+           int qualifiers;
+           int bt, v, t;
+
+           SValue *sv = vtop;
+           t = sv->type.t & VT_TYPE;
+           bt = t & VT_BTYPE;
             /* field */ 
            if (tok == TOK_CL_ARROW) 
               indir();
